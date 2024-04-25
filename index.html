@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consultoria de Energia Solar</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Consultoria de Consumo Mensal de Energia Solar</h1>
+        <form id="consultoriaForm">
+            <label for="nomeCliente">Nome do Cliente:</label>
+            <input type="text" id="nomeCliente" required>
+
+            <label for="consumoMensal">Consumo Mensal (kWh):</label>
+            <input type="number" id="consumoMensal" required>
+
+            <button type="button" onclick="consultar()">Consultar</button>
+        </form>
+
+        <div id="resultado" class="resultado"></div>
+    </div>
+
+    <script>
+        function consultar() {
+            const nomeCliente = document.getElementById('nomeCliente').value;
+            const consumoMensal = parseFloat(document.getElementById('consumoMensal').value);
+
+            if (consumoMensal < 30) {
+                document.getElementById('resultado').innerHTML = "Por favor, insira um valor acima de 30 kWh.";
+                return;
+            }
+
+            // Tabela de classificação de consumo
+            const tabelaConsumo = {
+                'baixo': [0, 200],
+                'médio': [201, 400],
+                'alto': [401, Infinity]
+            };
+
+            // Verificar o nível de consumo
+            let nivelConsumo = null;
+            for (let nivel in tabelaConsumo) {
+                if (consumoMensal >= tabelaConsumo[nivel][0] && consumoMensal <= tabelaConsumo[nivel][1]) {
+                    nivelConsumo = nivel;
+                    break;
+                }
+            }
+
+            if (nivelConsumo) {
+                let recomendacao = "";
+                if (nivelConsumo === 'baixo') {
+                    recomendacao = "Consumo baixo, consome pouca energia. Talvez seja viável investir em sistemas de armazenamento de energia, como baterias.";
+                } else if (nivelConsumo === 'médio') {
+                    recomendacao = "Consumo na média, a instalação não é obrigatória.";
+                } else {
+                    recomendacao = "Consome muita energia! Recomenda-se considerar a instalação de painéis solares para reduzir os custos.";
+                }
+
+                document.getElementById('resultado').innerHTML = `O consumo mensal de ${nomeCliente} é classificado como: ${nivelConsumo}. <br> <strong>${recomendacao}</strong>`;
+            } else {
+                document.getElementById('resultado').innerHTML = "Erro: O consumo inserido não corresponde a nenhum nível de consumo na tabela.";
+            }
+        }
+    </script>
+</body>
+</html>
